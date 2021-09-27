@@ -34,7 +34,7 @@ dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_qa (id serial NO
 
 # Merge individual netcdfs for each year into single table for import into the DB -------
 wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version3_Revision1/"
-yrs <- c(2016:2019)
+yrs <- 2020 # c(2016:2019)
 var_names <- c("seaice_conc_cdr", "stdev_of_seaice_conc_cdr", "melt_onset_day_seaice_conc_cdr", "qa_of_seaice_conc_cdr")
 tbl_names <- c("tbl_sic_cdr_conc", "tbl_sic_cdr_stdev", "tbl_sic_cdr_melt", "tbl_sic_cdr_qa")
 
