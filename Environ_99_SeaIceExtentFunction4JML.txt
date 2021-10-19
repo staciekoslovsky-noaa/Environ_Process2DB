@@ -1,0 +1,32 @@
+SELECT *
+FROM environ.fxn_sea_ice_extent_by_date(0.15, --concentration,
+									  -1701089, --xmin
+									  -4280076, --ymin
+									  1341794 , --xmax
+									  -1741504, --ymax
+									  3571, --epsg
+									  '2005-04-01', --start_date,
+									  '2005-04-15' -- end_date
+									 );
+									 
+CREATE FUNCTION environ.fxn_sea_ice_extent_by_date(_conc numeric(3,2), _xmin int, _ymin int, _xmax int, _ymax int, _epsg int, _start_date date, _end_date date) 
+	RETURNS TABLE (fdate date, area_km2_epsg3571 numeric) AS 
+$func$
+	WITH centroids AS
+	(SELECT id, cell, ST_Transform(ST_Centroid(geom), 3338) as centroid
+		FROM base.geo_analysis_grid
+		WHERE ST_Contains(
+			ST_Transform(
+				ST_MakeEnvelope(_xmin, _ymin, _xmax, _ymax, _epsg), 3338)
+			, ST_Transform(ST_Centroid(geom), 3338))
+		), 
+	conc AS 
+	(SELECT cell, fdate, ST_Value(rast, centroid) as sea_ice_conc
+		FROM centroids, environ.tbl_sic_cdr_conc
+		WHERE fdate >= _start_date AND fdate <= _end_date
+		AND ST_Value(rast, centroid) > _conc)
+	SELECT fdate, COUNT(cell) * 628.3810603009 as area_km2_epsg3571
+	FROM conc 
+	GROUP BY fdate
+$func$
+LANGUAGE SQL;
