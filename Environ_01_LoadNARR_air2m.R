@@ -37,8 +37,8 @@ wd <- "O://Data/GIS_External/Climate/NARR/air2m/"
 setwd(wd)
 fls <- dir(pattern = '*.nc')
 fls <- subset(fls, nchar(fls) == 14)
-yrs <- substring(fls, 8, 11)[16:17]
-#yrs <- 2020
+# yrs <- substring(fls, 8, 11)[16:17]
+yrs <- 2021
 
 # create our clipped raster, set projection to epsg:3338
 clip_extent <- extent(-5000000, 1900000, 300000, 4000000)
