@@ -19,6 +19,7 @@ install_pkg("raster")
 install_pkg("ncdf4")
 install_pkg("sp")
 install_pkg("rpostgis")
+install_pkg("stringr")
 
 # Run code -------------------------------------------------------
 # Import data into DB -------------------------------------------------------------------
@@ -33,9 +34,11 @@ dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_melt (id serial 
 dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_qa (id serial NOT NULL PRIMARY KEY, rid int NOT NULL, fdate date, rast raster);")
 
 # Merge individual netcdfs for each year into single table for import into the DB -------
-wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version3_Revision1/"
-yrs <- 2020 # c(2016:2019)
-var_names <- c("seaice_conc_cdr", "stdev_of_seaice_conc_cdr", "melt_onset_day_seaice_conc_cdr", "qa_of_seaice_conc_cdr")
+# wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version3_Revision1/"
+wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version4/"
+yrs <- c(2004:2020)
+# var_names <- c("seaice_conc_cdr", "stdev_of_seaice_conc_cdr", "melt_onset_day_seaice_conc_cdr", "qa_of_seaice_conc_cdr")
+var_names <- c("cdr_seaice_conc", "stdev_of_cdr_seaice_conc", "melt_onset_day_cdr_seaice_conc", "qa_of_cdr_seaice_conc")
 tbl_names <- c("tbl_sic_cdr_conc", "tbl_sic_cdr_stdev", "tbl_sic_cdr_melt", "tbl_sic_cdr_qa")
 
 # Set variables for processing each year, create our clipped raster, set projection to epsg:3338
@@ -66,9 +69,11 @@ for (i in 1:length(yrs)){
     # Connect to j-th file
     file <- files[j]
     nc_tmp <- ncdf4::nc_open(file)
-    nc_date <- as.Date(substr(files[j], 26,33), format = "%Y%m%d", tz = "UTC")
-    nc_lat <- ncdf4::ncvar_get(nc_tmp, attributes(nc_tmp$dim)$names[1])
-    nc_lon <- ncdf4::ncvar_get(nc_tmp, attributes(nc_tmp$dim)$names[2])
+    nc_date <- as.Date(str_extract(file, "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"), format = "%Y%m%d", tz = "UTC")
+    # nc_lat <- ncdf4::ncvar_get(nc_tmp, attributes(nc_tmp$dim)$names[1])
+    # nc_lon <- ncdf4::ncvar_get(nc_tmp, attributes(nc_tmp$dim)$names[2])
+    nc_lat <- ncdf4::ncvar_get(nc_tmp, "xgrid")
+    nc_lon <- ncdf4::ncvar_get(nc_tmp, "ygrid")
     
     # Process variables for each file
     for (k in 1:length(var_names)){
