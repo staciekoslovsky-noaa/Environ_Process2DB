@@ -81,6 +81,9 @@ for(i in unique(yrs)){
 # Delete temp tables from DB
 dbGetQuery(con, "DROP TABLE IF EXISTS environ.temp_vwnd")
 
+# Create index on layer (if it does not exist)
+# dbSendQuery(con, "CREATE INDEX tbl_narr_vwnd_rast_idx ON environ.tbl_narr_vwnd USING gist(ST_ConvexHull(rast))")
+
 # Clean up memory, DB and files on server
 dbDisconnect(con)
 rm(list=ls())
