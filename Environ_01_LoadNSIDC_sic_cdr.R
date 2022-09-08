@@ -27,7 +27,8 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               dbname = Sys.getenv("pep_db"), 
                               host = Sys.getenv("pep_ip"), 
                               user = Sys.getenv("pep_admin"), 
-                              rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
+                              password = Sys.getenv("admin_pw"))
+
 dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_conc (id serial NOT NULL PRIMARY KEY, rid int NOT NULL, fdate date, rast raster);")
 dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_stdev (id serial NOT NULL PRIMARY KEY, rid int NOT NULL, fdate date, rast raster);")
 dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_melt (id serial NOT NULL PRIMARY KEY, rid int NOT NULL, fdate date, rast raster);")
@@ -36,7 +37,8 @@ dbGetQuery(con, "CREATE TABLE IF NOT EXISTS environ.tbl_sic_cdr_qa (id serial NO
 # Merge individual netcdfs for each year into single table for import into the DB -------
 # wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version3_Revision1/"
 wd <- "O://Data/GIS_External/SeaIce/Data_NSIDC_CDR/Version4/"
-yrs <- c(2016:2020)
+yrs <- c(2004:2021)
+
 # var_names <- c("seaice_conc_cdr", "stdev_of_seaice_conc_cdr", "melt_onset_day_seaice_conc_cdr", "qa_of_seaice_conc_cdr")
 var_names <- c("cdr_seaice_conc", "stdev_of_cdr_seaice_conc", "melt_onset_day_cdr_seaice_conc", "qa_of_cdr_seaice_conc")
 tbl_names <- c("tbl_sic_cdr_conc", "tbl_sic_cdr_stdev", "tbl_sic_cdr_melt", "tbl_sic_cdr_qa")
