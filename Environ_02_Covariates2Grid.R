@@ -22,7 +22,7 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               dbname = Sys.getenv("pep_db"), 
                               host = Sys.getenv("pep_ip"), 
                               user = Sys.getenv("pep_admin"), 
-                              rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
+                              password = Sys.getenv("admin_pw"))
 
 # Get centroid layer from DB for looping
 centroid <- dbGetQuery(con, "SELECT cell FROM base.geo_analysis_grid_centroid")
@@ -188,10 +188,10 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
-                SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+                SELECT cell, fdate, ST_Value(ST_Transform(rast, 3338), centroid) as rast_seaice
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_sic_cdr_conc
-                ON ST_Intersects(rast, centroid)
+                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
                 WHERE date_part('month', fdate) >= 3 AND
                 date_part('month', fdate) <= 6 AND
                 cell = ", centroid$cell[1], sep = "" )
@@ -200,10 +200,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_seaice
-                SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+                SELECT cell, fdate, ST_Value(ST_Transform(rast, 3338), centroid) as rast_seaice
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_sic_cdr_conc
-                ON ST_Intersects(rast, centroid)
+                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
                 WHERE date_part('month', fdate) >= 3 AND
                 date_part('month', fdate) <= 6 AND
                 cell = ", cell, sep = "" )
