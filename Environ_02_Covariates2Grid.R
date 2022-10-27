@@ -32,10 +32,10 @@ centroid <- dbGetQuery(con, "SELECT cell FROM base.geo_analysis_grid_centroid")
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_acpcp;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_acpcp AS
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_acpcp
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_acpcp
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_acpcp
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", centroid$cell[1], sep = "" )
@@ -44,10 +44,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_acpcp
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_acpcp
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_acpcp
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_acpcp
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", cell, sep = "" )
@@ -58,7 +58,7 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_air2m;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_air2m AS
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_air2m
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_air2m
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_air2m
                 ON ST_Intersects(rast, centroid)
@@ -73,7 +73,7 @@ for (i in 2:nrow(centroid)){
                 SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_air2m
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_air2m
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", cell, sep = "" )
@@ -84,10 +84,10 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_airsfc;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_airsfc AS
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_airsfc
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_airsfc
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_airsfc
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", centroid$cell[1], sep = "" )
@@ -96,10 +96,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_airsfc
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_airsfc
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_airsfc
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_airsfc
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", cell, sep = "" )
@@ -110,10 +110,10 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_prmsl;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_prmsl AS
-               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_prmsl
+               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_prmsl
                FROM base.geo_analysis_grid_centroid
                LEFT JOIN environ.tbl_narr_prmsl
-               ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+               ON ST_Intersects(rast, centroid)
                WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                date_part('month', lower(fdatetime_range)::date) <= 6 AND
                cell = ", centroid$cell[1], sep = "" )
@@ -122,10 +122,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_prmsl
-               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_prmsl
+               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_prmsl
                FROM base.geo_analysis_grid_centroid
                LEFT JOIN environ.tbl_narr_prmsl
-               ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+               ON ST_Intersects(rast, centroid)
                WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                date_part('month', lower(fdatetime_range)::date) <= 6 AND
                cell = ", cell, sep = "" )
@@ -136,10 +136,10 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_uwnd;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_uwnd AS
-               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_uwnd
+               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_uwnd
                FROM base.geo_analysis_grid_centroid
                LEFT JOIN environ.tbl_narr_uwnd
-               ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+               ON ST_Intersects(rast, centroid)
                WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                date_part('month', lower(fdatetime_range)::date) <= 6 AND
                cell = ", centroid$cell[1], sep = "" )
@@ -148,10 +148,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_uwnd
-               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_uwnd
+               SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_uwnd
                FROM base.geo_analysis_grid_centroid
                LEFT JOIN environ.tbl_narr_uwnd
-               ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+               ON ST_Intersects(rast, centroid)
                WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                date_part('month', lower(fdatetime_range)::date) <= 6 AND
                cell = ", cell, sep = "" )
@@ -162,10 +162,10 @@ for (i in 2:nrow(centroid)){
 dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_vwnd;")
 
 sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_vwnd AS
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_vwnd
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_vwnd
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_vwnd
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                cell = ", centroid$cell[1], sep = "" )
@@ -174,10 +174,10 @@ dbSendQuery(con, sql)
 for (i in 2:nrow(centroid)){
   cell <- centroid$cell[i]
   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_vwnd
-                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(ST_Transform(rast, 3338), centroid) as rast_vwnd
+                SELECT cell, lower(fdatetime_range) as fdatetime_range_start, ST_Value(rast, centroid) as rast_vwnd
                 FROM base.geo_analysis_grid_centroid
                 LEFT JOIN environ.tbl_narr_vwnd
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
+                ON ST_Intersects(rast, centroid)
                 WHERE date_part('month', lower(fdatetime_range)::date) >= 3 AND
                 date_part('month', lower(fdatetime_range)::date) <= 6 AND
                 cell = ", cell, sep = "" )
@@ -185,30 +185,30 @@ for (i in 2:nrow(centroid)){
 }
 
 # Variable seaice
-dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
-
-sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
-                SELECT cell, fdate, ST_Value(ST_Transform(rast, 3338), centroid) as rast_seaice
-                FROM base.geo_analysis_grid_centroid
-                LEFT JOIN environ.tbl_sic_cdr_conc
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
-                WHERE date_part('month', fdate) >= 3 AND
-                date_part('month', fdate) <= 6 AND
-                cell = ", centroid$cell[1], sep = "" )
-dbSendQuery(con, sql)
-
-for (i in 2:nrow(centroid)){
-  cell <- centroid$cell[i]
-  sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_seaice
-                SELECT cell, fdate, ST_Value(ST_Transform(rast, 3338), centroid) as rast_seaice
-                FROM base.geo_analysis_grid_centroid
-                LEFT JOIN environ.tbl_sic_cdr_conc
-                ON ST_Intersects(ST_Transform(rast, 3338), centroid)
-                WHERE date_part('month', fdate) >= 3 AND
-                date_part('month', fdate) <= 6 AND
-                cell = ", cell, sep = "" )
-  dbSendQuery(con, sql)
-}
+# dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
+# 
+# sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
+#                 SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+#                 FROM base.geo_analysis_grid_centroid
+#                 LEFT JOIN environ.tbl_sic_cdr_conc
+#                 ON ST_Intersects(rast, centroid)
+#                 WHERE date_part('month', fdate) >= 3 AND
+#                 date_part('month', fdate) <= 6 AND
+#                 cell = ", centroid$cell[1], sep = "" )
+# dbSendQuery(con, sql)
+# 
+# for (i in 2:nrow(centroid)){
+#   cell <- centroid$cell[i]
+#   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_seaice
+#                 SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+#                 FROM base.geo_analysis_grid_centroid
+#                 LEFT JOIN environ.tbl_sic_cdr_conc
+#                 ON ST_Intersects(rast, centroid)
+#                 WHERE date_part('month', fdate) >= 3 AND
+#                 date_part('month', fdate) <= 6 AND
+#                 cell = ", cell, sep = "" )
+#   dbSendQuery(con, sql)
+# }
 
 # Create merged table
 dbSendQuery(con, "CREATE INDEX idx_cov_acpcp ON base.tbl_analysis_grid_cov_acpcp (cell, fdatetime_range_start);")
@@ -235,7 +235,7 @@ dbSendQuery(con, "CREATE TABLE base.tbl_analysis_grid_cov_wx AS
 
 # Create indexes
 dbSendQuery(con, "CREATE INDEX idx_cov_wx ON base.tbl_analysis_grid_cov_wx (cell, fdatetime_range_start);")
-dbSendQuery(con, "CREATE INDEX idx_cov_seaice ON base.tbl_analysis_grid_cov_seaice (cell, fdate);")
+# dbSendQuery(con, "CREATE INDEX idx_cov_seaice ON base.tbl_analysis_grid_cov_seaice (cell, fdate);")
 
 # Delete duplicate tables
 # dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_acpcp;")

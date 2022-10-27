@@ -27,7 +27,7 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               dbname = Sys.getenv("pep_db"), 
                               host = Sys.getenv("pep_ip"), 
                               user = Sys.getenv("pep_admin"), 
-                              rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
+                              password = Sys.getenv("admin_pw"))
 
 sql <- "CREATE TABLE IF NOT EXISTS environ.tbl_narr_uwnd (id serial NOT NULL PRIMARY KEY, rid int NOT NULL, fdatetime_range tstzrange, rast raster);"
 dbGetQuery(con, sql)
@@ -64,6 +64,7 @@ for(i in unique(yrs)){
 
     # Import raster into DB
     rpostgis::pgWriteRast(con, c("environ", "temp_uwnd"), raster = ras.tmp, overwrite = TRUE)
+    dbGetQuery(con, "SELECT UpdateRasterSRID(\'environ\', \'temp_uwnd\',\'rast\', 3338)")
     
     # Finish processing raster data in DB
     dt_char <- paste(i, "-01-01 00:00:00", sep = "")

@@ -95,6 +95,7 @@ for (i in 1:length(yrs)){
       
       # Import raster data into temp table in DB
       rpostgis::pgWriteRast(con, c("environ", "temp"), raster = tmp_nc_var, overwrite = TRUE)
+      dbGetQuery(con, "SELECT UpdateRasterSRID(\'environ\', \'temp\',\'rast\', 3338)")
       
       # Finish processing raster data in DB
       #rid <- as.numeric(format(nc_date, "%j"))
