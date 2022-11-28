@@ -185,6 +185,7 @@ for (i in 2:nrow(centroid)){
 }
 
 # Variable seaice
+### date_part('month', fdate) >= 3 AND date_part('month', fdate) <= 6 AND
 # dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
 # 
 # sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
@@ -192,10 +193,10 @@ for (i in 2:nrow(centroid)){
 #                 FROM base.geo_analysis_grid_centroid
 #                 LEFT JOIN environ.tbl_sic_cdr_conc
 #                 ON ST_Intersects(rast, centroid)
-#                 WHERE date_part('month', fdate) >= 3 AND
-#                 date_part('month', fdate) <= 6 AND
-#                 cell = ", centroid$cell[1], sep = "" )
+#                 WHERE cell = ", centroid$cell[1], sep = "" )
 # dbSendQuery(con, sql)
+# 
+# 
 # 
 # for (i in 2:nrow(centroid)){
 #   cell <- centroid$cell[i]
@@ -204,9 +205,7 @@ for (i in 2:nrow(centroid)){
 #                 FROM base.geo_analysis_grid_centroid
 #                 LEFT JOIN environ.tbl_sic_cdr_conc
 #                 ON ST_Intersects(rast, centroid)
-#                 WHERE date_part('month', fdate) >= 3 AND
-#                 date_part('month', fdate) <= 6 AND
-#                 cell = ", cell, sep = "" )
+#                 WHERE cell = ", cell, sep = "" )
 #   dbSendQuery(con, sql)
 # }
 
