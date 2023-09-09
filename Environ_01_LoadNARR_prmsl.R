@@ -38,7 +38,7 @@ setwd(wd)
 fls <- dir(pattern = '*.nc')
 fls <- subset(fls, nchar(fls) == 13)
 # yrs <- substring(fls, 7, 10)
-yrs <- 2021
+yrs <- 2022
 
 # create our clipped raster, set projection to epsg:3338
 clip_extent <- extent(-5000000, 1900000, 300000, 4000000)
