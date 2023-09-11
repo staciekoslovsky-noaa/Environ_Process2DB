@@ -1,8 +1,6 @@
 # Environmental Data Management
 
-Environmental data (NARR and NSIDC) are downloaded and stored on our internal network. Data products are loaded into the DB
-
-Code numbered 0+ are intended to be run sequentially as the data are available for processing. Code numbered 99 are stored for longetivity, but are intended to only be run once to address a specific issue or run as needed, depending on the intent of the code.
+Environmental data (NARR and NSIDC) are downloaded and stored on our internal network. Data products are loaded into the DB using the code stored in this repository. Code numbered 0+ are intended to be run sequentially as the data are available for processing. Code numbered 99 are stored for longetivity, but are intended to only be run once to address a specific issue or run as needed, depending on the intent of the code.
 
 The data management processing code is as follows:
 * **Environ_01_LoadNARR_acpcp.R** - code to import NARR precipitation data into the DB
