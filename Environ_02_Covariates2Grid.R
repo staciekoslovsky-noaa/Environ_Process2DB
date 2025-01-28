@@ -1,5 +1,5 @@
 # Process environmental covariates for grid centroids
-# Created by S. Hardy, 7MAY2018
+# Created by S. Koslovsky, 7MAY2018
 
 # Create functions -----------------------------------------------
 # Function to install packages needed
@@ -186,28 +186,29 @@ for (i in 2:nrow(centroid)){
 
 # Variable seaice
 ### date_part('month', fdate) >= 3 AND date_part('month', fdate) <= 6 AND
-# dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
-# 
-# sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
-#                 SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
-#                 FROM base.geo_analysis_grid_centroid
-#                 LEFT JOIN environ.tbl_sic_cdr_conc
-#                 ON ST_Intersects(rast, centroid)
-#                 WHERE cell = ", centroid$cell[1], sep = "" )
-# dbSendQuery(con, sql)
-# 
-# 
-# 
-# for (i in 2:nrow(centroid)){
-#   cell <- centroid$cell[i]
-#   sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_seaice
-#                 SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
-#                 FROM base.geo_analysis_grid_centroid
-#                 LEFT JOIN environ.tbl_sic_cdr_conc
-#                 ON ST_Intersects(rast, centroid)
-#                 WHERE cell = ", cell, sep = "" )
-#   dbSendQuery(con, sql)
-# }
+dbSendQuery(con, "DROP TABLE IF EXISTS base.tbl_analysis_grid_cov_seaice;")
+
+sql <- paste("CREATE TABLE base.tbl_analysis_grid_cov_seaice AS
+                SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+                FROM base.geo_analysis_grid_centroid
+                LEFT JOIN environ.tbl_sic_cdr_conc
+                ON ST_Intersects(rast, centroid)
+                WHERE cell = ", centroid$cell[1], sep = "" )
+dbSendQuery(con, sql)
+
+for (i in 2:nrow(centroid)){
+  cell <- centroid$cell[i]
+  sql <- paste("INSERT INTO base.tbl_analysis_grid_cov_seaice
+                SELECT cell, fdate, ST_Value(rast, centroid) as rast_seaice
+                FROM base.geo_analysis_grid_centroid
+                LEFT JOIN environ.tbl_sic_cdr_conc
+                ON ST_Intersects(rast, centroid)
+                WHERE cell = ", cell, sep = "" )
+  dbSendQuery(con, sql)
+}
+
+
+
 
 # Create merged table
 dbSendQuery(con, "CREATE INDEX idx_cov_acpcp ON base.tbl_analysis_grid_cov_acpcp (cell, fdatetime_range_start);")
